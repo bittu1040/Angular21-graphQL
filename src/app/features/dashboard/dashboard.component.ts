@@ -1,11 +1,13 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
+import { NavigationComponent } from '../../shared/components/navigation/navigation.component';
 import { AuthResponse } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink],
+  imports: [CommonModule, RouterLink, NavigationComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -39,5 +41,14 @@ export class DashboardComponent implements OnInit {
 
   onLogout(): void {
     this.authService.logout().subscribe();
+  }
+
+  getCurrentDate(): Date {
+    return new Date();
+  }
+
+  getUserFirstName(): string {
+    const user = this.authService.user();
+    return user?.name?.split(' ')[0] || 'User';
   }
 }

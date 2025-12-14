@@ -92,6 +92,8 @@ export class AuthService {
       tap((response) => {
         if (response.userId) {
           this.isAuthenticatedSignal.set(true);
+          // Also refresh profile when dashboard confirms auth
+          this.fetchProfile().subscribe();
         }
       }),
       catchError((error) => {
@@ -100,6 +102,39 @@ export class AuthService {
         return throwError(() => error);
       })
     );
+  }
+
+  /**
+   * Fetch the authenticated user's profile and set `currentUser`.
+   * Backend returns: { id: user._id, name: user.name, email: user.email }
+   */
+  fetchProfile(): Observable<User> {
+    return this.http
+      .get<{ user: { id: string; name: string; email: string } }>(`${this.API_URL}/profile`)
+      .pipe(
+        map((response) => {
+          const profile = response.user;
+          const user: User = {
+            _id: profile.id,
+            name: profile.name,
+            email: profile.email,
+            createdAt: '',
+            updatedAt: '',
+          };
+          return user;
+        }),
+        tap((user) => {
+          this.currentUser.set(user);
+          this.isAuthenticatedSignal.set(true);
+        }),
+        catchError((error) => {
+          this.errorSignal.set(error.error?.message || 'Failed to fetch profile');
+          // If profile fails, keep auth state conservative
+          this.currentUser.set(null);
+          this.isAuthenticatedSignal.set(false);
+          return throwError(() => error);
+        })
+      );
   }
 
   getUsers(): Observable<UsersResponse> {

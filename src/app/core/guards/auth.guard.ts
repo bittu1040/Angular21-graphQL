@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map, catchError } from 'rxjs';
+import { map, catchError, switchMap, of } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export const authGuard: CanActivateFn = () => {
@@ -14,15 +14,22 @@ export const authGuard: CanActivateFn = () => {
 
   // Otherwise, verify with server
   return authService.checkAuthStatus().pipe(
-    map((isAuthenticated) => {
-      if (isAuthenticated) {
-        return true;
+    switchMap((isAuthenticated) => {
+      if (!isAuthenticated) {
+        return of(router.createUrlTree(['/login']));
       }
-      return router.createUrlTree(['/login']);
+
+      // If authenticated but profile not loaded, hydrate it
+      if (!authService.user()) {
+        return authService.fetchProfile().pipe(
+          map(() => true),
+          catchError(() => of(router.createUrlTree(['/login'])))
+        );
+      }
+
+      return of(true);
     }),
-    catchError(() => {
-      return [router.createUrlTree(['/login'])];
-    })
+    catchError(() => of(router.createUrlTree(['/login'])))
   );
 };
 

@@ -1,17 +1,37 @@
-.card {
-  border: none;
-  border-radius: 10px;
-}
+.page-container {
+  padding-top: 80px;
+  min-height: 100vh;
+  background: var(--bg-primary);
 
-h2 {
-  color: #333;
-}
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
 
-.table {
-  margin-bottom: 0;
-}
+    h1 {
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
 
-.table thead th {
-  border-bottom: 2px solid #dee2e6;
-  font-weight: 600;
+    .card {
+      border: none;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      background: var(--card-bg);
+    }
+
+    .table {
+      margin-bottom: 0;
+
+      thead th {
+        border-bottom: 2px solid var(--border-color);
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      tbody td {
+        color: var(--text-secondary);
+      }
+    }
+  }
 }

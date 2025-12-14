@@ -1,12 +1,12 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { DatePipe, CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
+import { NavigationComponent } from '../../shared/components/navigation/navigation.component';
 import { User } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-users',
-  imports: [DatePipe, RouterLink],
+  imports: [CommonModule, DatePipe, NavigationComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
@@ -39,5 +39,9 @@ export class UsersComponent implements OnInit {
 
   onLogout(): void {
     this.authService.logout().subscribe();
+  }
+
+  getUserInitials(name: string): string {
+    return name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
   }
 }
