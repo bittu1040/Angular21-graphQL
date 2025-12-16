@@ -1,50 +1,78 @@
 <app-navigation></app-navigation>
 
 <div class="page-container">
-  <div class="container">
-    <h1>Users</h1>
+    <div class="container">
+        <h1>Users</h1>
 
-    @if (isLoading()) {
-      <div class="text-center py-5">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    } @else if (error()) {
-      <div class="alert alert-danger" role="alert">
-        {{ error() }}
-      </div>
-    } @else {
-      <div class="card">
-        <div class="card-body">
-          @if (users().length === 0) {
-            <p class="text-muted text-center py-4">No users found</p>
-          } @else {
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Created At</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (user of users(); track user._id; let i = $index) {
-                    <tr>
-                      <td>{{ i + 1 }}</td>
-                      <td>{{ user.name }}</td>
-                      <td>{{ user.email }}</td>
-                      <td>{{ user.createdAt | date: 'short' }}</td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
+        @if (isLoading()) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
-          }
         </div>
-      </div>
-    }
-  </div>
+        } @else if (error()) {
+        <div class="alert alert-danger" role="alert">
+            {{ error() }}
+        </div>
+        } @else {
+        <div class="card">
+            <div class="card-body">
+                @if (users().length === 0) {
+                <p class="text-muted text-center py-4">No users found</p>
+                } @else {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (user of users(); track user._id; let i = $index) {
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.createdAt | date: 'short' }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+
+<!-- I am using this space to learn signal -->
+
+
+<br><br>
+
+<div style="margin: 50px;">
+    <h3>Temperature Converter</h3>
+
+    <label>
+        Celsius:
+        <input type="number" [value]="celsius()" (input)="updateTemp($event.target.value)" />
+    </label>
+
+    <p>Fahrenheit: {{ fahrenheit() }}</p>
+
+    <hr>
+
+    <button (click)="increase()">+1°C</button>
+    <button (click)="decrease()">-1°C</button>
+
+    <button (click)="increaseBy(5)">+5°C</button>
+    <button (click)="decreaseBy(5)">-5°C</button>
+
+    <button (click)="reset()">Reset</button>
+
 </div>
