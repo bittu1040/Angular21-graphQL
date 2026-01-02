@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, linkedSignal, computed } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
@@ -19,8 +19,19 @@ export class DashboardComponent implements OnInit {
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
 
+  userId= signal(1);
+  selectedUserId= linkedSignal(() => this.userId());
+
+  userId1= signal(10);
+  selectedUserId1= computed(() => this.userId1());
+
   ngOnInit(): void {
     this.loadDashboard();
+    this.selectedUserId.set(25);
+    this.userId.set(15);
+
+    // this.selectedUserId1.set(35);
+    this.userId1.set(30);
   }
 
   loadDashboard(): void {
